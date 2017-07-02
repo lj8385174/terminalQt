@@ -16,19 +16,20 @@ public:
     void setValue(int val);
     int getValue();
     void updateValue();
+    void setDataStream(QByteArray arr[], int size);
     ~MyDialog();
 
 private slots:
     void on_pushButton_clicked();
-
     void on_Reset_clicked();
 
 private:
     Ui::MyDialog *ui;
     int i;
+    QByteArray dataStream[100];
 };
 
-//inline implementation
+//inline implementations
 
 inline void MyDialog::setValue(int val)
 {

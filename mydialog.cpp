@@ -31,6 +31,14 @@ void MyDialog::on_Reset_clicked()
     i = 0;
 }
 
+void MyDialog::setDataStream(QByteArray arr[], int size)
+{
+    for(int a = 0; a < size; a++)
+    {
+        MyDialog::dataStream[0] = arr[0];
+    }
+    ui->plainTextEdit->setPlainText(MyDialog::dataStream[0].toHex().toUpper());
+}
 
 
 

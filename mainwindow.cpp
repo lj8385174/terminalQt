@@ -169,7 +169,6 @@ void MainWindow::readData()
 
 
     static QByteArray buffer;
-    static int zaehler = 0;
     buffer.append(data);
 
     QByteArray startValue;
@@ -179,17 +178,18 @@ void MainWindow::readData()
     if (buffer.size() > 100)
     {
         int start = buffer.indexOf(startValue);
-        int length = buffer[start+2];  //byteanzahl an 2 stelle
+        int lengthOfStream = buffer[start+2];  //byteanzahl an 2 stelle
         //QString s = QString::number(start);
         //console->setPlainText(s);
-        console->setPlainText(buffer.mid(start,length).toHex().toUpper());
-        QByteArray buf = buffer.mid(start,length);
+        console->setPlainText(buffer.mid(start,lengthOfStream).toHex().toUpper());
+        QByteArray buf = buffer.mid(start,lengthOfStream);
         console->setPlainText(buf.toHex().toUpper());
-        buffer.clear();
         //mDialog->setValue(length);
         //mDialog->setValue(zaehler);
-        //zaehler++;
+        //mDialog->setDataStream(&buf, lengthOfStream);
+        mDialog->setDataStream(&buf, lengthOfStream);
         mDialog->updateValue();
+        buffer.clear();
     }
     //console->setPlainText(buffer);
     //console->setPlainText(buffer.toHex().toUpper());
