@@ -1,4 +1,5 @@
 QT += widgets serialport
+QT += charts
 
 TARGET = terminal
 TEMPLATE = app
@@ -8,13 +9,17 @@ SOURCES += \
     mainwindow.cpp \
     settingsdialog.cpp \
     console.cpp \
-    mydialog.cpp
+    mydialog.cpp \
+    chart.cpp \
+    chartview.cpp
 
 HEADERS += \
     mainwindow.h \
     settingsdialog.h \
     console.h \
-    mydialog.h
+    mydialog.h \
+    chart.h \
+    chartview.h
 
 FORMS += \
     mainwindow.ui \

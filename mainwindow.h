@@ -93,6 +93,8 @@ private slots:
 
     void on_actionShow_Data_triggered();
 
+
+
 private:
     void initActionsConnections();
 

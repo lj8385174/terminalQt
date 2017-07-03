@@ -202,8 +202,6 @@ void MainWindow::showStatusMessage(const QString &message)
 
 void MainWindow::on_actionShow_Data_triggered()
 {
-    //mDialog = new MyDialog(this);
     mDialog->show();
-    //Test Ronald
-    //mDialog->setValue(77);
 }
+
