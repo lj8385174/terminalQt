@@ -1,6 +1,18 @@
 #include "mydialog.h"
 #include "ui_mydialog.h"
 
+#include "chartview.h"
+
+#include "chart.h"
+#include "chartview.h"
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtCore/QtMath>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+
+QT_CHARTS_USE_NAMESPACE
+
 MyDialog::MyDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MyDialog)
@@ -8,6 +20,8 @@ MyDialog::MyDialog(QWidget *parent) :
     ui->setupUi(this);
 
     i = 0;
+    createRandomData();
+    createGraph();
 }
 
 MyDialog::~MyDialog()
@@ -86,7 +100,42 @@ void MyDialog::dataBuffer(QByteArray buf)
 
 void MyDialog::on_pushButton_clicked()
 {
+    //createRandomData();
 
+    mGraphWindow->show();
+}
+
+void MyDialog::createRandomData()
+{
+
+}
+
+void MyDialog::createGraph()
+{
+    //create some data to show...
+    QLineSeries *series = new QLineSeries();
+    for (int i = 0; i < 500; i++) {
+        QPointF p((qreal) i, qSin(M_PI / 50 * i) * 30 + (qrand()/2147483647));
+        p.ry() += qrand() % 20;
+        *series << p;
+    }
+
+    Chart *chart = new Chart();
+    chart->addSeries(series);
+    chart->setTitle("Zoom in/out example");
+    chart->setAnimationOptions(QChart::SeriesAnimations);
+    chart->legend()->hide();
+    chart->createDefaultAxes();
+
+    ChartView *chartView = new ChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+
+    mGraphWindow = new QMainWindow(this);
+    mGraphWindow->setCentralWidget(chartView);
+    mGraphWindow->resize(400, 300);
+    mGraphWindow->grabGesture(Qt::PanGesture);
+    mGraphWindow->grabGesture(Qt::PinchGesture);
 }
 
 void MyDialog::on_ResetButton_clicked()
@@ -95,4 +144,10 @@ void MyDialog::on_ResetButton_clicked()
     ui->label->setText("0");
     ui->plainTextEdit->setPlainText("-");
 
+}
+
+void MyDialog::on_Update_clicked()
+{
+    //mGraphWindow->repaint();
+    mGraphWindow->update();
 }

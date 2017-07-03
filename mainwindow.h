@@ -60,7 +60,6 @@
 
 #include "mydialog.h"
 
-
 QT_BEGIN_NAMESPACE
 
 class QLabel;

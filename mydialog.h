@@ -2,6 +2,8 @@
 #define MYDIALOG_H
 
 #include <QDialog>
+#include <QtWidgets/QMainWindow>
+#include "chartview.h"
 
 namespace Ui {
 class MyDialog;
@@ -17,17 +19,23 @@ public:
     int getValue();
     void updateValue();
     void dataBuffer(QByteArray buffer);
+    void createRandomData();
+    void createGraph();
     ~MyDialog();
 
 private slots:
     void on_pushButton_clicked();
     void on_ResetButton_clicked();
 
+    void on_Update_clicked();
+
 private:
     Ui::MyDialog *ui;
     int i;
     QByteArray dataStream;
     QByteArray inputBuffer;
+    QMainWindow *mGraphWindow;
+
 };
 
 //inline implementations
