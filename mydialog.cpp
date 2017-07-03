@@ -20,7 +20,7 @@ MyDialog::MyDialog(QWidget *parent) :
     ui->setupUi(this);
 
     i = 0;
-    createRandomData();
+    mGraphWindow = new QMainWindow(this);
     createGraph();
 }
 
@@ -105,11 +105,6 @@ void MyDialog::on_pushButton_clicked()
     mGraphWindow->show();
 }
 
-void MyDialog::createRandomData()
-{
-
-}
-
 void MyDialog::createGraph()
 {
     //create some data to show...
@@ -123,15 +118,13 @@ void MyDialog::createGraph()
     Chart *chart = new Chart();
     chart->addSeries(series);
     chart->setTitle("Zoom in/out example");
-    chart->setAnimationOptions(QChart::SeriesAnimations);
+    //chart->setAnimationOptions(QChart::SeriesAnimations);
     chart->legend()->hide();
     chart->createDefaultAxes();
 
     ChartView *chartView = new ChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
-
-    mGraphWindow = new QMainWindow(this);
     mGraphWindow->setCentralWidget(chartView);
     mGraphWindow->resize(400, 300);
     mGraphWindow->grabGesture(Qt::PanGesture);
@@ -149,5 +142,7 @@ void MyDialog::on_ResetButton_clicked()
 void MyDialog::on_Update_clicked()
 {
     //mGraphWindow->repaint();
+    createGraph();
     mGraphWindow->update();
+    //mGraphWindow->show();
 }

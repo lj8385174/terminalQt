@@ -19,7 +19,6 @@ public:
     int getValue();
     void updateValue();
     void dataBuffer(QByteArray buffer);
-    void createRandomData();
     void createGraph();
     ~MyDialog();
 
