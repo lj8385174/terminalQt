@@ -20,24 +20,50 @@ void MyDialog::updateValue()
     ui->label->setText(tmp);
 }
 
-void MyDialog::on_Reset_clicked()
+
+void MyDialog::dataBuffer(QByteArray buf)
 {
-    //ui->label->setText("Hallo");
-    //int tmp = MyDialog::get
+    static QByteArray buffer;
 
-    //QString tmp = QString::number(i);
-    //ui->label->setText(tmp);
+    buffer.append(buf);
+    //tmp.clear();
+    //ui->plainTextEdit->setPlainText(buf.toHex().toUpper());
 
-    i = 0;
-}
+    QByteArray startValue;
+    startValue[0] = 0xAA;
+    startValue[1] = 0x55;
 
-void MyDialog::setDataStream(QByteArray arr[], int size)
-{
-    for(int a = 0; a < size; a++)
+    int start = -1;
+    QByteArray tmp;
+
+    //TODO: Übertrag von letzten Bytes
+    if (buffer.size() > 10)
     {
-        MyDialog::dataStream[0] = arr[0];
+        start = buffer.indexOf(startValue);
+
+        if ((start != (-1))&&((buffer.size()>(start+10))))
+        {
+            int lengthOfStream = buffer[start+2];  //byteanzahl an 2 stelle
+
+            if(buffer.size()>=(start+lengthOfStream))
+            {
+                tmp = buffer.mid(start,lengthOfStream+1);
+
+                ui->plainTextEdit->setPlainText(tmp.toHex().toUpper());
+                ui->label_6->setText(QString::number(lengthOfStream));
+                ui->label_7->setText(QString::number(buffer[start+2]));
+
+                MyDialog::dataStream = tmp;
+                ui->plainTextEdit->setPlainText(tmp.toHex().toUpper());
+
+                MyDialog::updateValue();
+                //TODO: Plausiblitätscheck
+
+                tmp.clear();
+                buffer.clear();
+            }
+        }
     }
-    ui->plainTextEdit->setPlainText(MyDialog::dataStream[0].toHex().toUpper());
 }
 
 
@@ -45,4 +71,10 @@ void MyDialog::setDataStream(QByteArray arr[], int size)
 void MyDialog::on_pushButton_clicked()
 {
 
+}
+
+void MyDialog::on_ResetButton_clicked()
+{
+    i = 0;
+    ui->plainTextEdit->setPlainText("-");
 }
