@@ -1,2 +1,2 @@
 # terminalQt
-Read Serialport with Qt
+Read Serialport with Qt (QApplication)
