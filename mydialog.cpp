@@ -11,6 +11,8 @@
 #include <QtCharts/QLineSeries>
 #include <QtCharts/QValueAxis>
 
+#include <QTimer>
+
 QT_CHARTS_USE_NAMESPACE
 
 MyDialog::MyDialog(QWidget *parent) :
@@ -20,8 +22,15 @@ MyDialog::MyDialog(QWidget *parent) :
     ui->setupUi(this);
 
     i = 0;
+    alsData = new QtCharts::QLineSeries();
+    chart = new Chart();
     mGraphWindow = new QMainWindow(this);
     createGraph();
+
+    //Timer to update the graph
+    //QTimer *timer = new QTimer();
+    //connect(timer, SIGNAL(timeout()), this, SLOT(on_Update_clicked()));
+    //timer->start(1000);
 }
 
 MyDialog::~MyDialog()
@@ -82,12 +91,19 @@ void MyDialog::dataBuffer(QByteArray buf)
             {
                 tmp = buffer.mid(start,lengthOfStream+1);
 
-
                 MyDialog::dataStream = tmp;
                 ui->plainTextEdit->setPlainText(tmp.toHex().toUpper());
 
                 MyDialog::updateValue();
                 //TODO: Plausiblitätscheck
+
+                //add data to q line series data
+                quint8 highByte, lowByte;
+                highByte = dataStream.at(12);
+                lowByte = dataStream.at(13);
+                quint32 sum = highByte*256 + lowByte;
+                alsData->append((qreal)i,(qreal)sum);
+
 
                 tmp.clear();
                 buffer.clear();
@@ -108,15 +124,18 @@ void MyDialog::on_pushButton_clicked()
 void MyDialog::createGraph()
 {
     //create some data to show...
-    QLineSeries *series = new QLineSeries();
-    for (int i = 0; i < 500; i++) {
-        QPointF p((qreal) i, qSin(M_PI / 50 * i) * 30 + (qrand()/2147483647));
-        p.ry() += qrand() % 20;
-        *series << p;
-    }
 
-    Chart *chart = new Chart();
-    chart->addSeries(series);
+    //sine demonstration
+    //QLineSeries *series = new QLineSeries();
+    //for (int i = 0; i < 500; i++) {
+    //    QPointF p((qreal) i, qSin(M_PI / 50 * i) * 30 + (qrand()/2147483647));
+    //    p.ry() += qrand() % 20;
+    //    *series << p;
+    //}
+
+    chart->removeSeries(alsData);
+
+    chart->addSeries(alsData); //was series
     chart->setTitle("Zoom in/out example");
     //chart->setAnimationOptions(QChart::SeriesAnimations);
     chart->legend()->hide();
