@@ -3,7 +3,9 @@
 
 #include <QDialog>
 #include <QtWidgets/QMainWindow>
+#include <QtCharts/QLineSeries>
 #include "chartview.h"
+#include "chart.h"
 
 namespace Ui {
 class MyDialog;
@@ -34,6 +36,8 @@ private:
     QByteArray dataStream;
     QByteArray inputBuffer;
     QMainWindow *mGraphWindow;
+    QLineSeries *alsData;
+    Chart *chart;
 
 };
 
