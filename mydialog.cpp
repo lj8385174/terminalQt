@@ -60,6 +60,17 @@ void MyDialog::updateValue()
     ui->label_bytes->setText(tr("Bytes: %1").arg(QString::number(dataStream.at(2))));
     ui->label_version->setText(tr("Version: %1").arg(QString::number(dataStream.at(7))));
     ui->label_sachnummer->setText(tr("Sachnummer: %1").arg(QString::number(Sachnummer)));
+
+    QByteArray temp = dataStream;
+    QString gugus = dataStream.toHex().toUpper();
+
+    quint8 B19 = dataStream.at(19);
+    quint8 B20 = dataStream.at(20);
+    quint8 B21 = dataStream.at(21);
+
+    ui->label_byte1->setText("Byte1: " + QString::number(B19));
+    ui->label_byte2->setText("Byte2: " + QString::number(B20));
+    ui->label_byte3->setText("Byte3: " + QString::number(B21));
 }
 
 
