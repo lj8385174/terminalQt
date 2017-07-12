@@ -32,3 +32,6 @@ RESOURCES += \
 
 target.path = $$[QT_INSTALL_EXAMPLES]/serialport/terminal
 INSTALLS += target
+
+
+QT += widgets

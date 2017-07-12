@@ -156,6 +156,10 @@
    </property>
   </action>
   <action name="actionShow_Data">
+   <property name="icon">
+    <iconset resource="terminal.qrc">
+     <normaloff>:/images/glass.png</normaloff>:/images/glass.png</iconset>
+   </property>
    <property name="text">
     <string>Show Data</string>
    </property>

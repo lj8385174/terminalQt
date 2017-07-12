@@ -13,6 +13,9 @@
 
 #include <QTimer>
 
+#include <QMdiArea>
+#include <QMdiSubWindow>
+
 QT_CHARTS_USE_NAMESPACE
 
 MyDialog::MyDialog(QWidget *parent) :
@@ -22,7 +25,7 @@ MyDialog::MyDialog(QWidget *parent) :
     ui->setupUi(this);
 
     i = 0;
-    alsData = new QtCharts::QLineSeries();
+    GraphData = new QtCharts::QLineSeries();
     chart = new Chart();
     mGraphWindow = new QMainWindow(this);
     createGraph();
@@ -42,7 +45,7 @@ void MyDialog::updateValue()
 {
     i++;
     QString tmp = QString::number(i);
-    ui->label->setText(tmp);
+    ui->label->setText("Data Received: " + tmp);
 
 
     //read 'Sachnummer'
@@ -60,6 +63,8 @@ void MyDialog::updateValue()
     ui->label_bytes->setText(tr("Bytes: %1").arg(QString::number(dataStream.at(2))));
     //ui->label_version->setText(tr("Version: %1").arg(QString::number(dataStream.at(7))));
     //ui->label_sachnummer->setText(tr("Sachnummer: %1").arg(QString::number(Sachnummer)));
+
+    QString Event;
 
     QByteArray temp = dataStream;
     QString gugus = dataStream.toHex().toUpper();
@@ -94,7 +99,18 @@ void MyDialog::updateValue()
         if (Nachkommastellen & 0x02) Value = Value + 0.1250;
         if (Nachkommastellen & 0x04) Value = Value + 0.2500;
         if (Nachkommastellen & 0x08) Value = Value + 0.5000;
-        alsData->append((qreal)i,(qreal)Value);
+
+        //GraphData->append((qreal)i,(qreal)Value);
+        QPointF p(i,Value);
+        GraphData->insert(i,p);
+
+        if (i>100){
+            GraphData->removePoints(0,1);
+            chart->createDefaultAxes();
+            chart->removeSeries(GraphData);
+            chart->addSeries(GraphData);
+        }
+
 
         ui->LightMeasurement->setText(QString::number(Value,'f',4)+" lx");
 
@@ -102,6 +118,7 @@ void MyDialog::updateValue()
         if (Motion == 0x01)
         {
             ui->Motion->setText("Motion");
+            //Event = "Motion";
         }
         else
         {
@@ -110,7 +127,7 @@ void MyDialog::updateValue()
     }
     else if (CommandByte == 0x01)
     {
-        QString Event;
+
         if (DataByteLow == 0x00) Event = "Short Push";
         if (DataByteLow == 0x01) Event = "Double Click";
         if (DataByteLow == 0x02) Event = "Longpush";
@@ -118,10 +135,9 @@ void MyDialog::updateValue()
         ui->Motion->setText(Event);
 
         if (EventList.size() > 100) EventList = "";
-
         EventList.append(Event + "\n");
         ui->EventList->setPlainText(EventList);
-
+        Event.clear();
     }
 }
 
@@ -177,12 +193,6 @@ void MyDialog::dataBuffer(QByteArray buf)
 
 
 
-void MyDialog::on_pushButton_clicked()
-{
-    //createRandomData();
-    createGraph();
-    mGraphWindow->show();
-}
 
 void MyDialog::createGraph()
 {
@@ -196,15 +206,15 @@ void MyDialog::createGraph()
     //    *series << p;
     //}
 
-    chart->removeSeries(alsData);
+    chart->removeSeries(GraphData);
+    chart->addSeries(GraphData);
 
-    chart->addSeries(alsData); //was series
-    chart->setTitle("Zoom in/out example");
+    chart->setTitle("Ambient Light");
     //chart->setAnimationOptions(QChart::SeriesAnimations);
     chart->legend()->hide();
     chart->createDefaultAxes();
 
-    ChartView *chartView = new ChartView(chart);
+    chartView = new ChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
     mGraphWindow->setCentralWidget(chartView);
@@ -215,8 +225,8 @@ void MyDialog::createGraph()
 
 void MyDialog::on_ResetButton_clicked()
 {
-    i = 0;
-    ui->label->setText("0");
+    //i = 0;
+    //ui->label->setText("0");
     ui->plainTextEdit->setPlainText("-");
 
 }
@@ -227,4 +237,14 @@ void MyDialog::on_Update_clicked()
     createGraph();
     mGraphWindow->update();
     //mGraphWindow->show();
+
 }
+
+void MyDialog::on_GraphButton_clicked()
+{
+    //createRandomData();
+    createGraph();
+    mGraphWindow->show();
+
+}
+

@@ -25,10 +25,11 @@ public:
     ~MyDialog();
 
 private slots:
-    void on_pushButton_clicked();
     void on_ResetButton_clicked();
 
     void on_Update_clicked();
+
+    void on_GraphButton_clicked();
 
 private:
     Ui::MyDialog *ui;
@@ -36,8 +37,9 @@ private:
     QByteArray dataStream;
     QByteArray inputBuffer;
     QMainWindow *mGraphWindow;
-    QLineSeries *alsData;
+    QLineSeries *GraphData;
     Chart *chart;
+    ChartView *chartView;
 
 };
 
