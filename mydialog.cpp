@@ -29,6 +29,7 @@ MyDialog::MyDialog(QWidget *parent) :
     chart = new Chart();
     mGraphWindow = new QMainWindow(this);
     createGraph();
+    this->setWindowTitle("Serial Interface Data");
 
     //Timer to update the graph
     //QTimer *timer = new QTimer();
